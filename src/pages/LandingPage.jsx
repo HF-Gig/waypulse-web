@@ -10,7 +10,7 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import nangaParbat from "../assets/nanga_parbat.png";
+import nangaParbat from "../assets/nanga_parbat.jpg";
 import mountainRoad from "../assets/mountain_road.jpg";
 
 import {
