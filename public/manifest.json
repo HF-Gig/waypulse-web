@@ -1,0 +1,31 @@
+{
+  "short_name": "Waypulse",
+  "name": "Waypulse — Live Crowd-Sourced Travel & Route Updates",
+  "description": "Get real-time crowd-sourced road conditions, route updates, weather reports, and crowd ingestion for tourist destinations in Pakistan.",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#208ae5",
+  "dir": "ltr",
+  "lang": "en-US",
+  "display": "standalone",
+  "orientation": "portrait"
+}

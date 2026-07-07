@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import NavigationTabs from "../components/NavigationTabs";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-
-import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { Helmet } from "react-helmet-async";
+import { Suspense, lazy } from "react";
 import nangaParbat from "../assets/nanga_parbat.jpg";
 import mountainRoad from "../assets/mountain_road.jpg";
+
+const InteractiveMap = lazy(() => import("../components/InteractiveMap"));
 
 import {
   MapPin,
@@ -38,12 +35,6 @@ import {
   WifiOff,
 } from "lucide-react";
 
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 const INITIAL_UPDATES = [
   {
@@ -249,15 +240,6 @@ const CATEGORIES = [
   "Lakes",
 ];
 
-function MapController({ center }) {
-  const map = useMap();
-  useEffect(() => {
-    map.flyTo(center, 9, {
-      duration: 1.5,
-    });
-  }, [center, map]);
-  return null;
-}
 
 export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -625,6 +607,80 @@ export default function LandingPage() {
       ref={containerRef}
       className="relative w-full h-screen overflow-hidden bg-slate-50 text-slate-800 font-sans selection:bg-primary/20 selection:text-primary"
     >
+      <Helmet>
+        <title>Waypulse — Live Crowd-Sourced Travel & Route Updates</title>
+        <meta name="description" content="Get real-time crowd-sourced road conditions, route updates, weather reports, and crowd ingestion for tourist destinations in Pakistan." />
+        <link rel="canonical" href="https://waypulse-web.onrender.com/" />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebSite",
+                "@id": "https://waypulse-web.onrender.com/#website",
+                "url": "https://waypulse-web.onrender.com/",
+                "name": "Waypulse",
+                "description": "Real-Time Crowd-Sourced Pakistan Travel & Route Updates"
+              },
+              {
+                "@type": "Organization",
+                "@id": "https://waypulse-web.onrender.com/#organization",
+                "name": "Waypulse",
+                "url": "https://waypulse-web.onrender.com/",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://waypulse-web.onrender.com/favicon.svg"
+                },
+                "sameAs": ["https://github.com/HF-Gig/waypulse-web"]
+              },
+              {
+                "@type": "SoftwareApplication",
+                "@id": "https://waypulse-web.onrender.com/#softwareapp",
+                "name": "Waypulse Mobile App",
+                "operatingSystem": "Android, iOS",
+                "applicationCategory": "TravelApplication",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                },
+                "downloadUrl": "https://waypulse-web.onrender.com/waypulse-app.aab"
+              },
+              {
+                "@type": "FAQPage",
+                "@id": "https://waypulse-web.onrender.com/#faq",
+                "mainEntity": [
+                  {
+                    "@type": "Question",
+                    "name": "How can I post an update?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "You can download the Waypulse mobile app, sign up for a free account, and click the post icon. You can select your province, city/destination, choose a category (Mountains, Valleys, Heritage, Lakes, etc.), write a brief description of the current status, snap a live photo, and mark it as 'Opened' (accessible) or 'Closed' (blocked)."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "How does the app prevent spam and fake updates?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "We use a multi-tiered validation approach. First, other active travelers nearby can upvote or downvote reports based on their first-hand observations. Second, updates must include a photo taken within the coordinates of the location. Finally, admin moderators review flagged posts to remove spam immediately."
+                    }
+                  },
+                  {
+                    "@type": "Question",
+                    "name": "Does Waypulse require an active internet connection?",
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": "While posting requires internet, the Waypulse app caches the latest updates and map checkpoints offline. This means if you lose signal in deep valleys, you can still view previously loaded route maps and critical warnings."
+                    }
+                  }
+                ]
+              }
+            ]
+          })}
+        </script>
+      </Helmet>
+
       <header
         className={`fixed top-0 z-50 w-full transition-all duration-500 bg-transparent ${
           scrolled ? "py-2" : "py-4"
@@ -657,7 +713,9 @@ export default function LandingPage() {
           <div className="flex items-center gap-3 md:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2.5 rounded-full bg-white/50 backdrop-blur-md border border-white/50 text-slate-800 shadow-sm"
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              className="p-2.5 rounded-full bg-white/50 backdrop-blur-md border border-white/50 text-slate-800 shadow-sm cursor-pointer"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -709,7 +767,8 @@ export default function LandingPage() {
         )}
       </header>
 
-      <section className="section-panel relative h-full flex items-center justify-center overflow-hidden">
+      <main className="absolute inset-0 z-0">
+        <section className="section-panel relative h-full flex items-center justify-center overflow-hidden">
         {/* Background Image of Nanga Parbat */}
         <div className="absolute inset-0 z-0">
           <img
@@ -1010,6 +1069,7 @@ export default function LandingPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by city, valley, or uploader..."
+                aria-label="Search updates by city, valley, or uploader"
                 className="w-full bg-white border border-slate-200 pl-10 pr-4 py-2.5 rounded-2xl shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
               />
             </div>
@@ -1023,6 +1083,7 @@ export default function LandingPage() {
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
+                aria-pressed={selectedCategory === category}
                 className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
                   selectedCategory === category
                     ? "bg-primary text-white shadow-md shadow-primary/20"
@@ -1116,6 +1177,8 @@ export default function LandingPage() {
                         <div className="flex items-center gap-1.5 bg-white border border-slate-200 p-1 rounded-xl">
                           <button
                             onClick={() => handleVote(update.id, "up")}
+                            aria-label="Upvote this update"
+                            aria-pressed={isUpvoted}
                             className={`p-1.5 rounded-lg flex items-center gap-1 cursor-pointer transition-all ${
                               isUpvoted
                                 ? "bg-primary text-white shadow-sm"
@@ -1129,6 +1192,8 @@ export default function LandingPage() {
                           </button>
                           <button
                             onClick={() => handleVote(update.id, "down")}
+                            aria-label="Downvote this update"
+                            aria-pressed={isDownvoted}
                             className={`p-1.5 rounded-lg flex items-center gap-1 cursor-pointer transition-all ${
                               isDownvoted
                                 ? "bg-red-500 text-white shadow-sm"
@@ -1150,6 +1215,8 @@ export default function LandingPage() {
                                 : update.id,
                             )
                           }
+                          aria-label="Toggle comments"
+                          aria-expanded={activeCommentsSection === update.id}
                           className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-primary transition-colors cursor-pointer"
                         >
                           <MessageSquare className="w-4 h-4" />
@@ -1162,6 +1229,7 @@ export default function LandingPage() {
                               `Share link copied for ${update.location} update!`,
                             )
                           }
+                          aria-label={`Share updates for ${update.location}`}
                           className="p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-500 cursor-pointer"
                         >
                           <Share2 className="w-3.5 h-3.5" />
@@ -1244,42 +1312,18 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch animate-on-scroll">
             <div className="lg:col-span-8 bg-slate-100 border border-slate-200 rounded-[2rem] p-2 relative flex items-center justify-center h-[45vh] lg:h-[55vh] overflow-hidden shadow-inner">
-              <MapContainer
-                center={selectedHotspot.coordinates}
-                zoom={6}
-                scrollWheelZoom={false}
-                className="w-full h-full rounded-[1.5rem] z-0"
-              >
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                  url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+              <Suspense fallback={
+                <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 rounded-3xl">
+                  <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
+                  <p className="text-sm font-semibold text-slate-500 animate-pulse">Loading Geospatial Map...</p>
+                </div>
+              }>
+                <InteractiveMap
+                  selectedHotspot={selectedHotspot}
+                  setSelectedHotspot={setSelectedHotspot}
+                  mapHotspots={MAP_HOTSPOTS}
                 />
-
-                <MapController center={selectedHotspot.coordinates} />
-
-                {MAP_HOTSPOTS.map((spot) => (
-                  <Marker
-                    key={spot.id}
-                    position={spot.coordinates}
-                    eventHandlers={{
-                      click: () => setSelectedHotspot(spot),
-                    }}
-                  >
-                    <Popup className="font-sans">
-                      <div className="p-1">
-                        <strong className="block mb-1 text-slate-900">
-                          {spot.name}
-                        </strong>
-                        <span
-                          className={`text-xs px-2 py-1 rounded-md font-bold text-white ${spot.status === "Opened" ? "bg-emerald-500" : "bg-red-500"}`}
-                        >
-                          {spot.status}
-                        </span>
-                      </div>
-                    </Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
+              </Suspense>
             </div>
 
             <div className="lg:col-span-4 flex flex-col justify-between bg-white border border-slate-200 shadow-xl shadow-slate-200/50 rounded-[2rem] p-6 lg:p-8 h-[45vh] lg:h-[55vh] overflow-y-auto scrollbar-thin">
@@ -1439,6 +1483,8 @@ export default function LandingPage() {
                 >
                   <button
                     onClick={() => setActiveFAQ(isOpen ? null : index)}
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-answer-${index}`}
                     className="w-full px-6 py-5 flex items-center justify-between text-left font-bold text-slate-900 hover:text-primary transition-colors cursor-pointer"
                   >
                     <span>{faq.q}</span>
@@ -1449,7 +1495,10 @@ export default function LandingPage() {
                     )}
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-6 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-200/40 animate-fade-in">
+                    <div
+                      id={`faq-answer-${index}`}
+                      className="px-6 pb-6 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-200/40 animate-fade-in"
+                    >
                       {faq.a}
                     </div>
                   )}
@@ -1500,6 +1549,7 @@ export default function LandingPage() {
           </div>
         </footer>
       </section>
+      </main>
 
       {/* Floating Pagination Dots */}
       <div className="fixed right-6 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-3">
@@ -1521,6 +1571,8 @@ export default function LandingPage() {
                   goToSection(idx, dir);
                 }
               }}
+              aria-label={`Scroll to ${label}`}
+              aria-pressed={isActive}
               className="group relative flex items-center justify-end p-2 cursor-pointer focus:outline-none"
               title={label}
             >

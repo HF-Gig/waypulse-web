@@ -1,0 +1,35 @@
+# Waypulse
+
+Waypulse is a live, crowd-sourced travel companion and route update web application designed for travelers across Pakistan. It provides real-time information about road clearances, weather blockages, and scenic spots, verified directly by the traveling community.
+
+## Details
+* **Homepage:** https://waypulse-web.onrender.com/
+* **Repository:** https://github.com/HF-Gig/waypulse-web
+* **Primary Target:** Tourism in Pakistan (Gilgit-Baltistan, Hunza, Swat, Naran, Skardu, Gwadar, Murree, Azad Kashmir).
+* **Stack:** React.js, Tailwind CSS, GSAP (animations), React Leaflet (maps).
+
+## Core Features
+1. **Live Community Feed:** A real-time update board where users post reports on road conditions, snow, landslides, or clear routes.
+2. **Crowd Validation:** Travelers can upvote or downvote updates to verify accuracy in real time.
+3. **Interactive Tourism Map:** A map plotting active reports (Mountains, Valleys, Lakes, Heritage, Beaches) to show whether a location is 'Opened' or 'Closed'.
+4. **Low-Bandwidth Sync:** Highly optimized synchronization protocols allowing post uploads on weak (Edge/3G) signals using only 10–15 KB of data.
+5. **Photo Verification:** Direct in-app snapshot verification matching location coordinates to combat fake updates.
+
+## Frequently Asked Questions (FAQ)
+
+### How can I post an update?
+You can download the Waypulse mobile app, sign up for a free account, and click the post icon. You can select your province, city/destination, choose a category (Mountains, Valleys, Heritage, Lakes, etc.), write a brief description of the current status, snap a live photo, and mark it as 'Opened' (accessible) or 'Closed' (blocked).
+
+### How does the app prevent spam and fake updates?
+We use a multi-tiered validation approach:
+* Other active travelers nearby can upvote or downvote reports based on their first-hand observations.
+* Updates must include a photo taken within the coordinates of the location.
+* Admin moderators review flagged posts to remove spam immediately.
+
+### Does Waypulse require an active internet connection?
+While posting requires internet, the Waypulse app caches the latest updates and map checkpoints offline. This means if you lose signal in deep valleys, you can still view previously loaded route maps and critical warnings.
+
+## Resources
+* **Android Application Package (APK):** https://waypulse-web.onrender.com/waypulse-app.aab (Downloadable app bundle)
+* **FAQ Section:** Direct in-page navigations mapping to #faq
+* **Interactive Map View:** Direct in-page map canvas plotting historical check-in updates.
