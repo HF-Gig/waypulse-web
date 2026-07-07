@@ -15,21 +15,60 @@ Waypulse is a live, crowd-sourced travel companion and route update web applicat
 4. **Low-Bandwidth Sync:** Highly optimized synchronization protocols allowing post uploads on weak (Edge/3G) signals using only 10–15 KB of data.
 5. **Photo Verification:** Direct in-app snapshot verification matching location coordinates to combat fake updates.
 
-## Frequently Asked Questions (FAQ)
+---
 
-### How can I post an update?
-You can download the Waypulse mobile app, sign up for a free account, and click the post icon. You can select your province, city/destination, choose a category (Mountains, Valleys, Heritage, Lakes, etc.), write a brief description of the current status, snap a live photo, and mark it as 'Opened' (accessible) or 'Closed' (blocked).
+## Page & Section Directory
 
-### How does the app prevent spam and fake updates?
-We use a multi-tiered validation approach:
-* Other active travelers nearby can upvote or downvote reports based on their first-hand observations.
-* Updates must include a photo taken within the coordinates of the location.
-* Admin moderators review flagged posts to remove spam immediately.
+Since Waypulse is a statically prerendered Single Page Application (SPA), all core features are accessible on the homepage via scroll-snapped panels.
 
-### Does Waypulse require an active internet connection?
-While posting requires internet, the Waypulse app caches the latest updates and map checkpoints offline. This means if you lose signal in deep valleys, you can still view previously loaded route maps and critical warnings.
+| Section ID | Name | Description |
+|---|---|---|
+| `#hero` | Home / Hero | Overview of Waypulse, stats, and download entry points. |
+| `#features` | Features | Technical capabilities (Bandwidth optimization, coordinates verify, security). |
+| `#feed` | Live Updates | Real-time crowdsourced reports, search parameters, category filters, and upvote controls. |
+| `#map` | Interactive Map | Geospatial visualizer for checkpoints (Hunza, Murree, Kalam, Gwadar, Neelum, Gorakh). |
+| `#steps` | How it Works | Steps to post reports (Download app, snap photo, community vote, live status). |
+| `#faq` | FAQs | Frequently Asked Questions and Help documentation. |
 
-## Resources
+---
+
+## Simulated API Reference (Mobile Integration)
+
+Waypulse uses a lightweight REST API for data ingestion and synchronization between the mobile app, the server, and the web app:
+
+### 1. Fetch Reports
+* **Endpoint:** `GET /api/reports`
+* **Query Params:** `category` (optional), `search` (optional)
+* **Response:** JSON list of verified user posts containing location details, coordinates, photos, upvotes, and passability status.
+
+### 2. Create Report
+* **Endpoint:** `POST /api/reports`
+* **Authorization:** JWT Bearer Token
+* **Payload:** 
+  ```json
+  {
+    "location": "Babusar Pass, Gilgit-Baltistan",
+    "coordinates": [35.148, 74.043],
+    "category": "Mountains",
+    "status": "Closed",
+    "updateText": "Heavy snow accumulation. Road closed for all traffic.",
+    "photoBase64": "data:image/jpeg;base64,..."
+  }
+  ```
+
+---
+
+## Legal & Compliance
+
+### Privacy Policy Summary
+Waypulse collects location data solely during the report submission phase to verify coordinates. We do not track users in the background. Anonymous analytics are utilized to maintain server scalability.
+
+### Terms of Service Summary
+All updates posted to Waypulse are public. Spamming, posting outdated reports, or uploading unrelated images will result in immediate device bans. Community moderation controls the validity of all public postings.
+
+---
+
+## Important Resources
 * **Android Application Package (APK):** https://waypulse-web.onrender.com/waypulse-app.aab (Downloadable app bundle)
-* **FAQ Section:** Direct in-page navigations mapping to #faq
-* **Interactive Map View:** Direct in-page map canvas plotting historical check-in updates.
+* **Open Graph Preview Graphic:** https://waypulse-web.onrender.com/og-image.png (Public social share image card)
+* **Sitemap Registry:** https://waypulse-web.onrender.com/sitemap.xml
